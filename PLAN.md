@@ -65,7 +65,7 @@ aperçu fidèle, **annulation d'un seul Ctrl+Z**, zéro opération silencieuse (
 
 ## État d'avancement (ordre §8)
 
-- [x] **0. Tâche n°0** — `getUsedProjectItemIds` + audit + classification, **22 tests verts**.
+- [x] **0. Tâche n°0** — `getUsedProjectItemIds` + audit + classification, **27 tests verts**.
 - [x] **1. Squelette UXP** — `manifest.json` (minVersion 25.0, perms fs), panneau
   3 onglets, Audit branché sur l'adaptateur (`require("premierepro")` trivial).
 - [x] **2. Module Audit** — affichage par catégorie (orphelins, doublons, offline, bins vides).
@@ -73,7 +73,8 @@ aperçu fidèle, **annulation d'un seul Ctrl+Z**, zéro opération silencieuse (
 - [x] **4. Module Nettoyage** — `planCleanup` (testé) + `executeCleanup` (transaction, confirmation).
 - [x] **5. Module Rangement** — `planArrange` (testé) + `executeArrange` (createBin/move en transaction).
       Parsing résolution prototypé et testé (`resolution.js`) ; reste à valider `getProjectColumnsMetadata` en Premiere.
-- [ ] **6. Config JSON éditable depuis l'UI** (défauts en place via `config.js` ; persistance fs à câbler).
+- [x] **6. Config JSON éditable depuis l'UI** — `configSchema.js` (fusion/normalisation/réordonnancement, testé)
+      + `configStore.js` (persistance `fs` UXP) + éditeur d'ordre des critères (flèches + activation), Enregistrer/Réinitialiser.
 - [ ] **7. Compatibilité / repli API récentes.**
 - [ ] **8. Habillage cohérent ClipKeeper.**
 
