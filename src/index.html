@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="tabs">
+      <button class="tab active" data-tab="audit">Audit</button>
+      <button class="tab" data-tab="nettoyage">Nettoyage</button>
+      <button class="tab" data-tab="rangement">Rangement</button>
+    </div>
+
+    <section class="panel active" data-panel="audit">
+      <button id="btn-scan">Scanner le projet</button>
+      <div id="audit-results" class="results">
+        <p class="muted">Lance un scan pour auditer le projet (lecture seule).</p>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="nettoyage">
+      <p class="muted">Coche ce qui sera retiré <strong>du projet</strong> (jamais du disque).</p>
+      <label><input type="checkbox" id="clean-orphans" checked /> Clips orphelins</label>
+      <label><input type="checkbox" id="clean-bins" checked /> Bins vides</label>
+      <label><input type="checkbox" id="clean-dups" /> Doublons (garder une occurrence)</label>
+      <div id="clean-preview" class="results"></div>
+      <button id="btn-clean" disabled>Aperçu requis avant nettoyage</button>
+    </section>
+
+    <section class="panel" data-panel="rangement">
+      <p class="muted">Ordre des critères (glisser/flèches à venir) :</p>
+      <ol id="criteria-order" class="criteria"></ol>
+      <div id="tree-preview" class="results"></div>
+      <button id="btn-arrange" disabled>Aperçu requis avant rangement</button>
+    </section>
+
+    <div id="report" class="report"></div>
+
+    <script src="main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "binkeeper",
+  "version": "0.1.0",
+  "description": "Plugin UXP Premiere Pro : audit, nettoyage et rangement de projet.",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "@adobe/premierepro": "*"
+  }
+}
