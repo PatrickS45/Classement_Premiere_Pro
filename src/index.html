@@ -5,6 +5,11 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <header class="app-header">
+      <div class="app-title">BinKeeper</div>
+      <div class="app-info" id="app-info">Audit · Nettoyage · Rangement de projet</div>
+    </header>
+
     <div class="tabs">
       <button class="tab active" data-tab="audit">Audit</button>
       <button class="tab" data-tab="nettoyage">Nettoyage</button>
@@ -12,30 +17,36 @@
     </div>
 
     <section class="panel active" data-panel="audit">
-      <button id="btn-scan">Scanner le projet</button>
+      <button id="btn-scan" class="primary">Scanner le projet</button>
+      <div class="section-label">Rapport (lecture seule)</div>
       <div id="audit-results" class="results">
-        <p class="muted">Lance un scan pour auditer le projet (lecture seule).</p>
+        <span class="muted">Lance un scan pour auditer le projet — rien n’est modifié.</span>
       </div>
     </section>
 
     <section class="panel" data-panel="nettoyage">
-      <p class="muted">Coche ce qui sera retiré <strong>du projet</strong> (jamais du disque).</p>
+      <div class="section-label">À retirer du projet</div>
+      <p class="muted">Retrait <strong>du projet</strong> uniquement — jamais du disque.</p>
       <label><input type="checkbox" id="clean-orphans" checked /> Clips orphelins</label>
       <label><input type="checkbox" id="clean-bins" checked /> Bins vides</label>
       <label><input type="checkbox" id="clean-dups" /> Doublons (garder une occurrence)</label>
       <button id="btn-clean-preview">Aperçu</button>
+      <div class="section-label">Aperçu</div>
       <div id="clean-preview" class="results"></div>
-      <button id="btn-clean" disabled>Aperçu requis avant nettoyage</button>
+      <button id="btn-clean" class="primary" disabled>Aperçu requis avant nettoyage</button>
     </section>
 
     <section class="panel" data-panel="rangement">
-      <p class="muted">Ordre des critères (glisser/flèches à venir) :</p>
+      <div class="section-label">Ordre des critères</div>
+      <p class="muted">Coche pour activer, flèches pour réordonner.</p>
       <ol id="criteria-order" class="criteria"></ol>
       <button id="btn-arrange-preview">Aperçu de l’arborescence</button>
+      <div class="section-label">Aperçu de l’arborescence</div>
       <div id="tree-preview" class="results"></div>
-      <button id="btn-arrange" disabled>Aperçu requis avant rangement</button>
+      <button id="btn-arrange" class="primary" disabled>Aperçu requis avant rangement</button>
+      <div class="section-label">Configuration</div>
       <div class="config-actions">
-        <button id="btn-config-save">Enregistrer la config</button>
+        <button id="btn-config-save">Enregistrer</button>
         <button id="btn-config-reset">Réinitialiser</button>
       </div>
     </section>

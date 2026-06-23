@@ -76,7 +76,9 @@ aperçu fidèle, **annulation d'un seul Ctrl+Z**, zéro opération silencieuse (
 - [x] **6. Config JSON éditable depuis l'UI** — `configSchema.js` (fusion/normalisation/réordonnancement, testé)
       + `configStore.js` (persistance `fs` UXP) + éditeur d'ordre des critères (flèches + activation), Enregistrer/Réinitialiser.
 - [ ] **7. Compatibilité / repli API récentes.**
-- [ ] **8. Habillage cohérent ClipKeeper.**
+- [x] **8. Habillage cohérent ClipKeeper** — charte appliquée (fond sombre, accent cyan/teal,
+      labels de section majuscules, boutons contour, en-tête `› BinKeeper` + ligne d'info
+      version/plateforme/projet). Logo bitmap à intégrer si fourni.
 
 > Les modules 4/5 sont fonctionnellement complets mais leur couche d'exécution
 > (`pproAdapter`) n'est pas exécutable hors de Premiere : à valider via UXP

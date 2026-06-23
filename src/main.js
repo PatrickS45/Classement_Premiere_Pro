@@ -198,6 +198,28 @@ $('btn-config-reset').addEventListener('click', () => {
   report('Configuration réinitialisée (non encore enregistrée).');
 });
 
+// --- En-tête (façon ClipKeeper : version · plateforme · projet) --------------
+async function updateHeaderInfo() {
+  const parts = [];
+  try {
+    const ppro = require('premierepro');
+    const app = ppro.Application || (ppro.app);
+    const version = app && (app.version || (app.getVersion && (await app.getVersion())));
+    if (version) parts.push(`Premiere ${version}`);
+  } catch { /* hors Premiere : on ignore */ }
+  try {
+    const os = require('os');
+    parts.push(os.platform && os.platform() === 'win32' ? 'Windows' : (os.platform ? os.platform() : ''));
+  } catch { /* ignore */ }
+  try {
+    const ppro = require('premierepro');
+    const project = await ppro.Project.getActiveProject();
+    if (project) parts.push(`Projet : ${project.name || 'sans nom'}`);
+  } catch { /* ignore */ }
+  const info = parts.filter(Boolean).join(' · ');
+  if (info) $('app-info').textContent = info;
+}
+
 // --- Démarrage ---------------------------------------------------------------
 (async function init() {
   try {
@@ -207,4 +229,5 @@ $('btn-config-reset').addEventListener('click', () => {
     state.config = defaults();
   }
   applyConfigToUI();
+  updateHeaderInfo();
 })();
