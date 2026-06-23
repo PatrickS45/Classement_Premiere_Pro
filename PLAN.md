@@ -65,17 +65,21 @@ aperçu fidèle, **annulation d'un seul Ctrl+Z**, zéro opération silencieuse (
 
 ## État d'avancement (ordre §8)
 
-- [x] **0. Tâche n°0** — `getUsedProjectItemIds` + audit + classification, **14 tests verts**.
+- [x] **0. Tâche n°0** — `getUsedProjectItemIds` + audit + classification, **22 tests verts**.
 - [x] **1. Squelette UXP** — `manifest.json` (minVersion 25.0, perms fs), panneau
   3 onglets, Audit branché sur l'adaptateur (`require("premierepro")` trivial).
-- [ ] **2. Module Audit** — affichage complet par catégorie (logique prête, à finir l'UI).
-- [ ] **3. Aperçu + compte-rendu** communs.
-- [ ] **4. Module Nettoyage** — actions de retrait + confirmation.
-- [ ] **5. Module Rangement** — traduction arbo → createBin/move en transaction
-  (+ prototype résolution préalable).
-- [ ] **6. Config JSON éditable depuis l'UI.**
+- [x] **2. Module Audit** — affichage par catégorie (orphelins, doublons, offline, bins vides).
+- [x] **3. Aperçu + compte-rendu** communs (dry-run gating des boutons + zone report).
+- [x] **4. Module Nettoyage** — `planCleanup` (testé) + `executeCleanup` (transaction, confirmation).
+- [x] **5. Module Rangement** — `planArrange` (testé) + `executeArrange` (createBin/move en transaction).
+      Parsing résolution prototypé et testé (`resolution.js`) ; reste à valider `getProjectColumnsMetadata` en Premiere.
+- [ ] **6. Config JSON éditable depuis l'UI** (défauts en place via `config.js` ; persistance fs à câbler).
 - [ ] **7. Compatibilité / repli API récentes.**
 - [ ] **8. Habillage cohérent ClipKeeper.**
+
+> Les modules 4/5 sont fonctionnellement complets mais leur couche d'exécution
+> (`pproAdapter`) n'est pas exécutable hors de Premiere : à valider via UXP
+> Developer Tool avant mise en vente (cf. §Vérifications).
 
 ## Vérifications à faire dans Premiere (UXP Developer Tool)
 
