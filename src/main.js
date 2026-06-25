@@ -198,26 +198,47 @@ $('btn-config-reset').addEventListener('click', () => {
   report('Configuration réinitialisée (non encore enregistrée).');
 });
 
-// --- En-tête (façon ClipKeeper : version · plateforme · projet) --------------
-async function updateHeaderInfo() {
-  const parts = [];
+// --- Compatibilité + en-tête (CDC §2/§7) -------------------------------------
+async function checkCompatibility() {
+  let ppro;
   try {
-    const ppro = require('premierepro');
-    const app = ppro.Application || (ppro.app);
-    const version = app && (app.version || (app.getVersion && (await app.getVersion())));
-    if (version) parts.push(`Premiere ${version}`);
-  } catch { /* hors Premiere : on ignore */ }
+    ppro = require('premierepro');
+  } catch {
+    return; // hors Premiere (ex. aperçu navigateur) : on n'altère rien
+  }
+  const { inspect } = require('./api/capabilities');
+  const min = state.config.compatibilite.version_premiere_min;
+  const rep = await inspect(ppro, min);
+
+  // En-tête : version · plateforme · projet
+  const parts = [];
+  if (rep.version) parts.push(`Premiere ${rep.version}`);
   try {
     const os = require('os');
-    parts.push(os.platform && os.platform() === 'win32' ? 'Windows' : (os.platform ? os.platform() : ''));
+    if (os.platform) parts.push(os.platform() === 'win32' ? 'Windows' : os.platform());
   } catch { /* ignore */ }
   try {
-    const ppro = require('premierepro');
     const project = await ppro.Project.getActiveProject();
     if (project) parts.push(`Projet : ${project.name || 'sans nom'}`);
   } catch { /* ignore */ }
-  const info = parts.filter(Boolean).join(' · ');
-  if (info) $('app-info').textContent = info;
+  if (parts.length) $('app-info').textContent = parts.join(' · ');
+
+  // Version trop ancienne : on prévient et on bride les actions destructives.
+  if (rep.versionKnown && !rep.meetsMinimum) {
+    report(`⚠ Version Premiere ${rep.version} < minimum requis ${min}. ` +
+           `Certaines fonctions sont désactivées.`);
+  }
+  // Désactivation ciblée selon les capacités détectées.
+  if (!rep.canClean) disable('btn-clean-preview', 'Nettoyage indisponible sur cette version');
+  if (!rep.canArrange) disable('btn-arrange-preview', 'Rangement indisponible sur cette version');
+  if (!rep.canAudit) disable('btn-scan', 'Audit indisponible sur cette version');
+}
+
+function disable(id, label) {
+  const el = $(id);
+  if (!el) return;
+  el.disabled = true;
+  if (label) el.textContent = label;
 }
 
 // --- Démarrage ---------------------------------------------------------------
@@ -229,5 +250,5 @@ async function updateHeaderInfo() {
     state.config = defaults();
   }
   applyConfigToUI();
-  updateHeaderInfo();
+  checkCompatibility();
 })();

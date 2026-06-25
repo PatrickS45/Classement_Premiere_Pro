@@ -65,7 +65,7 @@ aperçu fidèle, **annulation d'un seul Ctrl+Z**, zéro opération silencieuse (
 
 ## État d'avancement (ordre §8)
 
-- [x] **0. Tâche n°0** — `getUsedProjectItemIds` + audit + classification, **27 tests verts**.
+- [x] **0. Tâche n°0** — `getUsedProjectItemIds` + audit + classification, **30 tests verts**.
 - [x] **1. Squelette UXP** — `manifest.json` (minVersion 25.0, perms fs), panneau
   3 onglets, Audit branché sur l'adaptateur (`require("premierepro")` trivial).
 - [x] **2. Module Audit** — affichage par catégorie (orphelins, doublons, offline, bins vides).
@@ -75,10 +75,11 @@ aperçu fidèle, **annulation d'un seul Ctrl+Z**, zéro opération silencieuse (
       Parsing résolution prototypé et testé (`resolution.js`) ; reste à valider `getProjectColumnsMetadata` en Premiere.
 - [x] **6. Config JSON éditable depuis l'UI** — `configSchema.js` (fusion/normalisation/réordonnancement, testé)
       + `configStore.js` (persistance `fs` UXP) + éditeur d'ordre des critères (flèches + activation), Enregistrer/Réinitialiser.
-- [ ] **7. Compatibilité / repli API récentes.**
-- [x] **8. Habillage cohérent ClipKeeper** — charte appliquée (fond sombre, accent cyan/teal,
-      labels de section majuscules, boutons contour, en-tête `› BinKeeper` + ligne d'info
-      version/plateforme/projet). Logo bitmap à intégrer si fourni.
+- [x] **7. Compatibilité / repli API récentes** — `version.js` (comparaison pure, testé)
+      + `capabilities.js` (détection runtime + `callMaybe`) ; appels d'API récents gardés
+      dans l'adaptateur ; au démarrage : version comparée au minimum, modules bridés si API absente.
+- [x] **8. Habillage** — identité propre BinKeeper (fond sombre, accent cyan/teal, labels de
+      section majuscules, boutons contour, en-tête `› BinKeeper` + ligne d'info). Logo à intégrer si fourni.
 
 > Les modules 4/5 sont fonctionnellement complets mais leur couche d'exécution
 > (`pproAdapter`) n'est pas exécutable hors de Premiere : à valider via UXP
