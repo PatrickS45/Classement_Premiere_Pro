@@ -14,6 +14,7 @@
 'use strict';
 
 const { extractResolutionFps } = require('../core/resolution');
+const { callMaybe } = require('./capabilities');
 
 let ppro = null;
 function getPpro() {
@@ -69,14 +70,15 @@ async function walkFolder(api, folder, parentBinId, out) {
     const clip = api.ClipProjectItem.cast ? api.ClipProjectItem.cast(child) : null;
     handles.set(id, { item: child, parentFolder: folder, isFolder: false });
     if (clip) {
-      const isSeq = await clip.isSequence();
+      // Appels gardés : isMulticamClip/isMergedClip peuvent manquer sur d'anciennes versions.
+      const isSeq = safe(await callMaybe(clip, 'isSequence', [], false));
       out.push({
         id, name, parentBinId,
         kind: isSeq ? 'sequence' : 'clip',
-        mediaPath: isSeq ? null : safe(await clip.getMediaFilePath()),
-        isOffline: isSeq ? false : safe(await clip.isOffline()),
-        isMulticam: safe(await clip.isMulticamClip()),
-        isMerged: safe(await clip.isMergedClip()),
+        mediaPath: isSeq ? null : safe(await callMaybe(clip, 'getMediaFilePath')),
+        isOffline: isSeq ? false : safe(await callMaybe(clip, 'isOffline', [], false)),
+        isMulticam: safe(await callMaybe(clip, 'isMulticamClip', [], false)),
+        isMerged: safe(await callMaybe(clip, 'isMergedClip', [], false)),
       });
     } else {
       out.push({ id, name, kind: 'clip', parentBinId, mediaPath: null });
@@ -124,8 +126,11 @@ async function enrichClipsForArrange(model) {
 }
 
 async function readResolutionFps(clip) {
+  // getProjectColumnsMetadata peut être absent : repli sur résolution inconnue
+  // (le critère "resolution_fps" devient alors sans effet, pas d'erreur).
+  const json = await callMaybe(clip, 'getProjectColumnsMetadata', [], null);
+  if (json == null) return { width: null, height: null, fps: null };
   try {
-    const json = await clip.getProjectColumnsMetadata();
     const cols = typeof json === 'string' ? JSON.parse(json) : json;
     return extractResolutionFps(cols);
   } catch {
@@ -135,16 +140,13 @@ async function readResolutionFps(clip) {
 
 async function readType(api, clip) {
   // Mapping ContentType -> familles du CDC §4. À confirmer en Premiere.
-  try {
-    const ct = await clip.getContentType();
-    const C = api.Constants.ContentType || {};
-    if (ct === C.Audio) return 'audio';
-    if (ct === C.Still || ct === C.Image) return 'image';
-    if (ct === C.Graphic || ct === C.MOGRT) return 'graphic';
-    return 'video';
-  } catch {
-    return 'video';
-  }
+  const ct = await callMaybe(clip, 'getContentType', [], null);
+  if (ct == null) return 'video';
+  const C = (api.Constants && api.Constants.ContentType) || {};
+  if (ct === C.Audio) return 'audio';
+  if (ct === C.Still || ct === C.Image) return 'image';
+  if (ct === C.Graphic || ct === C.MOGRT) return 'graphic';
+  return 'video';
 }
 
 // --- Exécution des plans (transactions annulables) ---------------------------
